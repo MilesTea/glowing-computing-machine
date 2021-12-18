@@ -19,7 +19,6 @@ class FlatIterator:
 			value, is_over = self.split()
 			return value
 		else:
-			value
 			self.counter += 1
 			return value
 
@@ -47,14 +46,38 @@ class FlatIterator:
 			is_over = True		# сообщает экземпляру выше о том, что можно переходить к созданию следующего экземпляра
 			return value, is_over
 
+
+
+
+def flat_generator(raw_list):
+	counter = 0
+	length = len(raw_list)
+	while counter < length:
+		if isinstance(raw_list[counter], list):
+			for item in flat_generator(raw_list[counter]):
+				yield item
+			counter += 1
+		else:
+			yield raw_list[counter]
+			counter += 1
+
+
+
 nested_list = [
-	[1, 2, [3, 4, [5], 6]],
 	['a', 'b', 'c'],
 	['d', 'e', 'f', 'h', False],
-	[1, 2, None]
+	[1, 2, None],
 ]
+
 for item in FlatIterator(nested_list):
 	print(item)
 
 flat_list = [item for item in FlatIterator(nested_list)]
 print(flat_list)
+
+for item in flat_generator(nested_list):
+	print(item)
+
+flat_list = [item for item in flat_generator(nested_list)]
+print(flat_list)
+
